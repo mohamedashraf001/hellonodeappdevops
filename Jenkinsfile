@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_HUB_USER = 'mohamedashraf001'
+        DOCKER_HUB_USER = 'cfxf46r@gmail.com'
         DOCKER_HUB_PASS = credentials('docker-hub-credentials')
         IMAGE_NAME = "mohamedashraf001/node-hello"
         KUBECONFIG = credentials('kubeconfig-file')
