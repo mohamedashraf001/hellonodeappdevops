@@ -40,8 +40,7 @@ pipeline {
             steps {
                 script {
                     // نفذ test.js اللي بيختبر السيرفر
-                    sh "node test.js"
-                }
+                 sh "docker exec node-test node test.js"                }
             }
         }
 
