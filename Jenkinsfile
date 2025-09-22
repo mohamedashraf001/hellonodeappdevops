@@ -61,11 +61,9 @@ pipeline {
         }
 
         stage('Deploy to Kubernetes') {
-            steps {
-                // استخدام kubeconfig كـ secret file
-                withCredentials([file(credentialsId: 'kubeconfig-file', variable: 'KUBECONFIG_FILE')]) {
-                    sh 'export KUBECONFIG=$KUBECONFIG_FILE && kubectl apply -f k8s/'
-                }
+            
+             steps {
+                sh "kubectl apply -f k8s/"
             }
         }
     }
