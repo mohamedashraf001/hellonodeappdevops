@@ -27,9 +27,10 @@ pipeline {
         stage('Run Container for Test') {
             steps {
                 script {
-                    // شغل الكونتينر مؤقتًا علشان نقدر نعمل عليه test
+                     // احذف الكونتينر القديم لو موجود
+                    sh "docker rm -f node-test || true"
+                    // شغل الكونتينر للتست
                     sh "docker run -d -p 4000:4000 --name node-test ${IMAGE_NAME}:${BUILD_NUMBER}"
-                    // استنى شوية لحد السيرفر يقوم
                     sh "sleep 5"
                 }
             }
