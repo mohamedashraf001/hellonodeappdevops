@@ -28,7 +28,7 @@ pipeline {
             steps {
                 script {
                     // شغل الكونتينر مؤقتًا علشان نقدر نعمل عليه test
-                    sh "docker run -d -p 3000:3000 --name node-test ${IMAGE_NAME}:${BUILD_NUMBER}"
+                    sh "docker run -d -p 4000:4000 --name node-test ${IMAGE_NAME}:${BUILD_NUMBER}"
                     // استنى شوية لحد السيرفر يقوم
                     sh "sleep 5"
                 }
