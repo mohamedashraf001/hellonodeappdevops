@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_HUB_USER = 'cfxf46r@gmail.com'
-        DOCKER_HUB_PASS = credentials('docker-hub-credentials')
+        DOCKER_HUB_PASS = '16001700xX'
         IMAGE_NAME = "mohamedashraf001/node-hello"
         KUBECONFIG = credentials('kubeconfig-file')
     }
