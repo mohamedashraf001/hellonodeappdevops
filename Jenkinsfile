@@ -5,7 +5,6 @@ pipeline {
         DOCKER_HUB_USER = 'cfxf46r@gmail.com'
         DOCKER_HUB_PASS = '16001700xX'
         IMAGE_NAME = "mohamedashraf001/node-hello"
-        KUBECONFIG = credentials('kubeconfig-file')
     }
 
     stages {
@@ -27,7 +26,7 @@ pipeline {
         stage('Run Container for Test') {
             steps {
                 script {
-                     // احذف الكونتينر القديم لو موجود
+                    // حذف الكونتينر القديم لو موجود
                     sh "docker rm -f node-test || true"
                     // شغل الكونتينر للتست
                     sh "docker run -d -p 4000:4000 --name node-test ${IMAGE_NAME}:${BUILD_NUMBER}"
@@ -39,15 +38,14 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    // نفذ test.js اللي بيختبر السيرفر
-                 sh "docker exec node-test node test.js"                }
+                    sh "docker exec node-test node test.js"
+                }
             }
         }
 
         stage('Cleanup Test Container') {
             steps {
                 script {
-                    // امسح الكونتينر بتاع التست بعد ما نخلص
                     sh "docker rm -f node-test || true"
                 }
             }
@@ -64,10 +62,9 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                script {
-                    // استخدم kubeconfig من Jenkins credentials
-                    writeFile file: 'kubeconfig', text: KUBECONFIG
-                    sh 'export KUBECONFIG=$WORKSPACE/kubeconfig && kubectl apply -f k8s/'
+                // استخدام kubeconfig كـ secret file
+                withCredentials([file(credentialsId: 'kubeconfig-file', variable: 'KUBECONFIG_FILE')]) {
+                    sh 'export KUBECONFIG=$KUBECONFIG_FILE && kubectl apply -f k8s/'
                 }
             }
         }
