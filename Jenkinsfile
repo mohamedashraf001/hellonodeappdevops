@@ -24,6 +24,35 @@ pipeline {
             }
         }
 
+        stage('Run Container for Test') {
+            steps {
+                script {
+                    // شغل الكونتينر مؤقتًا علشان نقدر نعمل عليه test
+                    sh "docker run -d -p 3000:3000 --name node-test ${IMAGE_NAME}:${BUILD_NUMBER}"
+                    // استنى شوية لحد السيرفر يقوم
+                    sh "sleep 5"
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                script {
+                    // نفذ test.js اللي بيختبر السيرفر
+                    sh "node test.js"
+                }
+            }
+        }
+
+        stage('Cleanup Test Container') {
+            steps {
+                script {
+                    // امسح الكونتينر بتاع التست بعد ما نخلص
+                    sh "docker rm -f node-test || true"
+                }
+            }
+        }
+
         stage('Push to Docker Hub') {
             steps {
                 script {
