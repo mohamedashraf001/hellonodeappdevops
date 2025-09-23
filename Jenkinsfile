@@ -5,6 +5,7 @@ pipeline {
         DOCKER_HUB_USER = 'cfxf46r@gmail.com'
         DOCKER_HUB_PASS = '16001700xX'
         IMAGE_NAME = "mohamedashraf001/node-hello"
+        KUBECONFIG = "/kubeconfig"   // ده المهم عشان يقرأ kubeconfig اللي انت عامل له mount
     }
 
     stages {
@@ -26,9 +27,7 @@ pipeline {
         stage('Run Container for Test') {
             steps {
                 script {
-                    // حذف الكونتينر القديم لو موجود
                     sh "docker rm -f node-test || true"
-                    // شغل الكونتينر للتست
                     sh "docker run -d -p 4000:4000 --name node-test ${IMAGE_NAME}:${BUILD_NUMBER}"
                     sh "sleep 5"
                 }
@@ -61,9 +60,13 @@ pipeline {
         }
 
         stage('Deploy to Kubernetes') {
-            
-             steps {
-                sh "kubectl apply -f k8s/ --validate=false" 
+            steps {
+                script {
+                    // عشان يتأكد إن kubectl شايف الـ config mounted
+                    sh "kubectl config view"
+                    // يعمل deploy للـ manifests اللي في k8s/
+                    sh "kubectl apply -f k8s/ --validate=false"
+                }
             }
         }
     }
