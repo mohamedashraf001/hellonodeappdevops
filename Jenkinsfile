@@ -5,7 +5,7 @@ pipeline {
         DOCKER_HUB_USER = 'cfxf46r@gmail.com'
         DOCKER_HUB_PASS = '16001700xX'
         IMAGE_NAME = "mohamedashraf001/node-hello"
-        KUBECONFIG = "/kubeconfig"   // ده المهم عشان يقرأ kubeconfig اللي انت عامل له mount
+        KUBECONFIG = "/home/mohamed/.kube/config"
     }
 
     stages {
@@ -62,12 +62,10 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    // عشان يتأكد إن kubectl شايف الـ config mounted
-                    sh "kubectl config view"
-                    // يعمل deploy للـ manifests اللي في k8s/
-                    sh "kubectl apply -f k8s/ --validate=false"
+                    sh "kubectl --kubeconfig=$KUBECONFIG config view"
+                    sh "kubectl --kubeconfig=$KUBECONFIG apply -f k8s/ --validate=false"
                 }
             }
         }
     }
-}
+} 
